@@ -1,6 +1,7 @@
 const path = require('path')
 
 module.exports = {
+  target: 'node',
   mode: 'development',
   watch: true,
   entry: {
@@ -8,6 +9,16 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, '../dist'),
-    filename: '[name].js'
+    filename: '[name].js',
+    libraryTarget: 'commonjs2'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader'
+      }
+    ]
   }
 }
