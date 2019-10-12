@@ -30,8 +30,13 @@ export default class ChromeExtensionHmrWebpackPlugin {
     callback()
   }
   compile (compilation) {
+    // import(this.manifestPath).then(res=>{
+    //   let test =res
+    // })
+    debugger
     this.manifest = requirePath(`${this.manifestPath}`)
-    const test = require(this.manifestPath)
+    debugger
+    const test = require.context(this.manifestPath)
     debugger
     console.log('manifest', this.manifest)
   }
