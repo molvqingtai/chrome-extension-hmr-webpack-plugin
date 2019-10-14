@@ -1,7 +1,6 @@
 // import { ConcatSource } from 'webpack-sources'
 // const Module = require('module')
 // const fs = require('fs')
-
 import fs from 'fs'
 import Module from 'module'
 
@@ -30,13 +29,9 @@ export default class ChromeExtensionHmrWebpackPlugin {
     callback()
   }
   compile (compilation) {
-    // import(this.manifestPath).then(res=>{
-    //   let test =res
-    // })
-    debugger
     this.manifest = requirePath(`${this.manifestPath}`)
     debugger
-    const test = require.context(this.manifestPath)
+    const test = require(this.manifestPath)
     debugger
     console.log('manifest', this.manifest)
   }

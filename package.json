@@ -2,7 +2,7 @@
   "name": "chrome-extension-hmr-webpack-plugin",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/main.js",
+  "main": "dist/index.js",
   "scripts": {
     "dev": "webpack --config build/webpack.config.js"
   },
