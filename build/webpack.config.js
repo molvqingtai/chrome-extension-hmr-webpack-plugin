@@ -4,6 +4,7 @@ module.exports = {
   target: 'node',
   mode: 'development',
   watch: true,
+  devtool: 'source-map',
   entry: {
     index: './src/index.js'
   },
