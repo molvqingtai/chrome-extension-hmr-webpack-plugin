@@ -2,6 +2,8 @@ import { ConcatSource } from 'webpack-sources'
 import { $require } from './utils'
 import * as client from 'raw-loader!./client'
 import { merge, template } from 'lodash'
+import { info, error } from './logger'
+import Server from './server'
 
 const PLUGIN_NAME = 'ChromeExtensionHmrWebpackPlugin'
 
@@ -68,7 +70,33 @@ export default class ChromeExtensionHmrWebpackPlugin {
     callback()
   }
   afterEmit (compilation, callback) {
+    if (!this.server || !this.manifest) return done()
+    let { content_scripts, background } = this.manifest
+    let scripts = background.scripts ? background.scripts : []
+    if (content_scripts && content_scripts.length) {
+      content_scripts.forEach(content => scripts = scripts.concat(content.js))
+    }
+    info(' Starting the Chrome Hot Plugin Reload Server...')
+    comp.chunks.forEach(function (chunk, name) {
+      var hash = chunkVersions[chunk.name]
+      chunkVersions[chunk.name] = chunk.hash
+      if (chunk.hash !== hash) {
+        let changed = chunk.files.filter(file => scripts.indexOf(file) !== -1)
+        if (changed.length) {
+          this.server.signRestart()
+        } else {
+          this.server.signReload(chunk.id, chunk.id)
+        }
+      }
+    }.bind(this))
 
+    let manifest = comp.fileTimestamps[this.manifestPath]
+    if ((manifestTimestamp || 1) < (manifest || Infinity)) {
+      manifestTimestamp = Date.now()
+      console.log('manifestTimestamp')
+      this.server.signRestart()
+    }
+    return done()
   }
   apply (compiler) {
     // 监听模式下，一个新的编译(compilation)触发之后，执行一个插件，但是是在实际编译开始之前。
